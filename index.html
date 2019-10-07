@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<meta charset=UTF-8>
+<title>Start Page</title>
+<link href="style.css" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:500,500i&display=swap" rel="stylesheet">
+<script type='text/javascript' src='knockout-2.2.1.js'></script>
+</head>
+
+<body>
+<div class="wrapper">
+	<header class="main-head">Panfu28's custom start page</header>
+	<nav class="main-nav">
+		<ul>
+			<li><a href="https://web.whatsapp.com/" target="_blank">Whatsapp Web</a></li>
+			<li><a href="https://www.roblox.com/home" target="_blank">Roblox</a></li>
+			<a href="https://www.youtube.com/" target="_blank">Youtube</a>
+			<a href="https://www.google.com/gmail/" target="_blank">Gmail</a>
+			<a href="" target="_blank"></a>
+			<a href="" target="_blank"></a>
+			<a href="" target="_blank"></a>
+			<a href="" target="_blank"></a>
+		</ul>
+	</nav>
+
+	<article class="content">
+		<br>
+		<form action="https://www.google.com/search">
+		<input type="text" name="q" autocomplete="off" autofocus placeholder="Search Google" class="srch"></form>
+		<br><br>
+		<form action="http://ddg.gg">
+		<input type="text" name="q" autocomplete="off" autofocus placeholder="Search DuckDuckGo" id="duck" class="srch"></form>
+	</article>
+
+	<aside class="side1"><u>4chan</u><br>
+		<a href="https://boards.4channel.org/g/" title="Technology" target="_blank">/g/</a>
+		<a href="https://boards.4channel.org/vg/" title="Videogame generals" target="_blank">/vg/</a>
+		<a href="https://boards.4channel.org/fit/" title="Fitness" target="_blank">/fit/</a>
+		<a href="https://boards.4channel.org/x/" title="P͟͞͝a̸̧r҉͝a̸n͞o҉r͝͝͡m̀̕͟a̡l̵̡͠
+" style="background-color:#ffffff;color:#000000; target="_blank">/x̷́҉/</a>
+		<a href="https://boards.4channel.org/fa/" title="Style" target="_blank">/fa/</a>
+		<a href="https://boards.4channel.org/fa/" title="Cars" target="_blank">/o/</a>
+		<a href="https://boards.4channel.org/fa/" title="DIY" target="_blank">/diy/</a>
+	</aside>
+
+	<div class="side2"><u>Reddit</u><br>
+		<a href="https://www.reddit.com/r/homelab/" target="_blank">r/Homelab</a><br>
+		<a href="https://www.reddit.com/r/admincraft/" target="_blank">r/Admincraft</a><br>
+		<a href="https://www.reddit.com/r/Minecraft/" target="_blank">r/Minecraft</a>
+	</div>
+		
+	<footer class="main-footer"><ul data-bind="foreach:servers">
+		<li><a href="#" data-bind="text:name,attr:{href: 'http://'+name}">tester</a><span data-bind="text:status,css:status"></span></li></ul>
+	</footer>
+
+<script>
+function ping(ip, callback) {
+
+	if (!this.inUse) {
+		this.status = 'unchecked';
+		this.inUse = true;
+		this.callback = callback;
+		this.ip = ip;
+		var _that = this;
+		this.img = new Image();
+		this.img.onload = function () {
+			_that.inUse = false;
+			_that.callback('✔');
+
+		};
+		this.img.onerror = function (e) {
+			if (_that.inUse) {
+				_that.inUse = false;
+				_that.callback('✔', e);
+			}
+
+		};
+		this.start = new Date().getTime();
+		this.img.src = "http://" + ip;
+		this.timer = setTimeout(function () {
+			if (_that.inUse) {
+				_that.inUse = false;
+				_that.callback('✘');
+			}
+		}, 1500);
+	}
+}
+var PingModel = function (servers) {
+	var self = this;
+	var myServers = [];
+	ko.utils.arrayForEach(servers, function (location) {
+		myServers.push({
+			name: location,
+			status: ko.observable('unchecked')
+		});
+	});
+	self.servers = ko.observableArray(myServers);
+	ko.utils.arrayForEach(self.servers(), function (s) {
+		s.status('checking');
+		new ping(s.name, function (status, e) {
+			s.status(status);
+		});
+	});
+};
+var komodel = new PingModel([
+	'localhost',
+	'186.137.157.226',
+	'192.168.1.101',
+	]);
+ko.applyBindings(komodel);
+</script>
+</body>
